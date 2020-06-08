@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const { spawn } = require("child_process");
 
+//what
+//this is the quivalent of the LS dir
 
 // main route for directory details
 // usage: post a json with this format
@@ -8,7 +10,7 @@ const { spawn } = require("child_process");
 //
 
 router.route('/').post((req, res) => {
-        //use spawn for alot of outputs
+    //use spawn for alot of outputs
     console.log(req.body);
 
     var return_me = { "data" : "xdata"};
@@ -38,7 +40,9 @@ router.route('/').post((req, res) => {
     
     }
     
-    promiseDirectoryDetails(req.body.directory).then((resolve) => {
+    const directory = String(req.body.directory);
+
+    promiseDirectoryDetails(directory).then((resolve) => {
         console.log(resolve);
         res.json(return_me.data);
     }).catch( (reject) =>{
@@ -49,6 +53,6 @@ router.route('/').post((req, res) => {
 
 
 
-module.exports =router;
+module.exports = router;
 
 
