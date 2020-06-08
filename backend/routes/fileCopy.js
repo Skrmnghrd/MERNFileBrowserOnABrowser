@@ -21,8 +21,7 @@ router.route('/').post((req, res) => {
     var return_me = { "data" : "xdata"};
 /* 
 TODO: FIX THE PROMISES, 
-1.Check if file exists,
-2.Stop copying if filename exists
+
 3.Rename the file with trailing number eg test => test1.txt => test2.txt
 */
     let promiseFileCopy = function(source, destination) {
