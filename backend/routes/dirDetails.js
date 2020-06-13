@@ -6,20 +6,41 @@ const { spawn } = require("child_process");
 
 // main route for directory details
 // usage: post a json with this format
-// { "directory" : 'your dir here' }
+// 
+/*
+{ 
+    "directory" : 'your dir here',
+    "command" : "-l or -a ",
+}
+
+replies with either
+{
+    "msg" : "GOOD", "STDERR", "CODE"
+}
+*/
 //
 
 router.route('/').post((req, res) => {
     //use spawn for alot of outputs
     console.log(req.body);
 
-    var return_me = { "data" : "xdata"};
+    var return_me = { 
+        "data" : "",
+        "stderr" : "",
+        "error" : "",
+        "close" : "",
+        "resolve" : "",
+        "reject" : "",
+    };
 
-    let promiseDirectoryDetails = function(directory) {
+    let promiseDirectoryDetails = function(directory, commands) {
         return new Promise(function(resolve, reject){
 
             //convert dir to string for sec reasons
-            let ls = spawn("ls", [String(directory)]); 
+           
+            //let ls = spawn("ls", [ [String(directory), " ", String(commands)].join("") ]);
+            let ls = spawn("ls", [ String(directory), String(commands) ]); 
+
             ls.stdout.on("data", data => {
                 //from a buffer, to string, to an array split by newline
                 data = data.toString().split("\n");
@@ -28,25 +49,42 @@ router.route('/').post((req, res) => {
                 data.pop();
                 
                 //stringify to add "" and parse to parse it neatly
+                
                 return_me.data = JSON.parse(JSON.stringify(data) );
                 //console.log(return_me.data );
-
-                resolve("Promise DirDet: Success!"); 
-                // call this or things won't stop looping here
-
-                //add reject in the future
+                return_me.resolve = {"msg": "GOOD"};
+                resolve( {"msg": "GOOD"} ); 
+     
             });
+            ls.stderr.on("data", data => {
+                return_me.resolve = {"msg": "STDERR"};
+                resolve( {"msg": "STDERR"} ); 
+            });
+            ls.on("error", (error) => {
+                return_me.reject ={'msg': "ERROR"};
+                reject( {'msg': "ERROR"} );
+            });
+            ls.on("close", (code) => {
+                if (code) {
+                    return_me.reject = {'msg': "CODE"};
+                    reject( {'msg': "CODE"} );
+                }
+            });
+
         });
     
     }
     
     const directory = String(req.body.directory);
+    const command = String(req.body.command);
 
-    promiseDirectoryDetails(directory).then((resolve) => {
+
+    promiseDirectoryDetails(directory, command).then((resolve) => {
         console.log(resolve);
-        res.json(return_me.data);
-    }).catch( (reject) =>{
-        console.log("Error", reject );
+        res.json(return_me);
+    }).catch( (reject) => { 
+    //catch is not gonna happen since they deal with errors inside the spawn
+    res.json(reject);
     })
 });
 
