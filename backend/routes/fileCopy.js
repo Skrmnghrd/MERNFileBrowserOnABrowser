@@ -9,8 +9,8 @@ const fs = require('fs');
 // 
 // usage: post a json with this format
 // { 
-//    "source" : 'your SOURCE PATH here',
-//    "destination" : 'your DEST PATH here'
+//    "source" : 'C://users/paulo/filename.txt',
+//    "destination" : 'C://users/paulo/new_filename.txt'
 //  }
 //
 
@@ -20,36 +20,48 @@ router.route('/').post((req, res) => {
 
     var return_me = { "data" : "xdata"};
 /* 
-TODO: FIX THE PROMISES, 
-
+TODO:
+2. Get the filepath later on.
 3.Rename the file with trailing number eg test => test1.txt => test2.txt
 */
     let promiseFileCopy = function(source, destination) {
         return new Promise(function(resolve, reject){
-            //convert source and dest to string
-            //fixed paths for now
+
             //dest name check
-            fs.access('test2.txt', fs.F_OK, (err) => {
+            source = String(source);
+            destination = String(destination);
+
+            //check if file exists
+            fs.access(String(destination), fs.F_OK, (err) => {
                 if (err) {
                     //file does not exist so copy it
                     fs.copyFile(source, destination, (err) => {
                         if (err) {
-                            return({'msg': 'error'});
+                            return_me.data = {'msg': 'error'}
+                            reject({'msg': 'error'});
+                        }else {
+                            return_me.data = {'msg' : 'success'}
+                            resolve({'msg' : 'success'});
                         }
-                        return( { 'msg': 'success'});
                     })
-                    resolve({'msg' : 'success'});
+                    
                 }
                 else {
+                    return_me.data = {'msg': 'duplicate'} 
                     reject({'msg': 'duplicate'});
-                    console.log('FILE RAN AFTER REJECT');
                 }
             })
+            //end fs.access
         })
     
     }
     
-    promiseFileCopy('test.txt', 'test2.txt').then((resolve) => {
+
+    const source = String(req.body.source);
+    const destination = String(req.body.destination);
+
+
+    promiseFileCopy(source, destination).then((resolve) => {
         console.log(resolve);
         res.json(return_me.data);
     }).catch( (reject) =>{

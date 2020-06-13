@@ -83,7 +83,7 @@ router.route('/').post((req, res) => {
         console.log(resolve);
         res.json(return_me);
     }).catch( (reject) => { 
-    //catch is not gonna happen since they deal with errors inside the spawn
+
     res.json(reject);
     })
 });
