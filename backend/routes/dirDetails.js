@@ -35,7 +35,7 @@ router.route('/').post((req, res) => {
 
     let promiseDirectoryDetails = function(directory, commands) {
         return new Promise(function(resolve, reject){
-
+            console.log("Called");
             //convert dir to string for sec reasons
            
             //let ls = spawn("ls", [ [String(directory), " ", String(commands)].join("") ]);
@@ -78,7 +78,6 @@ router.route('/').post((req, res) => {
     const directory = String(req.body.directory);
     const command = String(req.body.command);
 
-
     promiseDirectoryDetails(directory, command).then((resolve) => {
         console.log(resolve);
         res.json(return_me);
@@ -92,5 +91,4 @@ router.route('/').post((req, res) => {
 
 
 module.exports = router;
-
 

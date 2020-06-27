@@ -22,13 +22,15 @@ const dirDetailsRouter = require('./routes/dirDetails');
 const fileCopyRouter = require('./routes/fileCopy');
 const changeDir = require('./routes/changeDir');
 
+
 app.use(cors());
 app.use(bodyParser.json());
+
+process.chdir("../../");
 
 app.use('/dirDetails', dirDetailsRouter);
 app.use('/fileCopy', fileCopyRouter);
 app.use('/changeDir', changeDir);
-
 
 app.listen(port, () => {
     console.log(`Server is running! on port: ${port} `);

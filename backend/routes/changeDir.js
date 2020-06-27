@@ -2,27 +2,43 @@ const router = require('express').Router();
 const path = require("path");
 const process = require("process");
 
+const dirDetails = require('./dirDetailsFunction');
 
 
-router.route('/').get((req, res) => {
-    console.log(GLOBALcurrent_dir);
-    //looks like a bad idea to track the dir at the back end since it stays 
-    //the same with ifferent users
-    let changeWorkingDir = function(path){
+router.route('/').post((req, res) => {
+    //how do you call a method from another router?
+    const directory = String(req.body.directory);
+    const commands = String(req.body.command);
+
+    let changeWorkingDir = function(directory, commands){
+
         return new Promise(function(resolve, reject){
             //don't forget to stringify the path later
-            try{
-                process.chdir(path);
-                resolve( {'msg': "GOOD"});
-            }
-            catch(err){
-                reject( {'msg' : 'ERROR'} );
-            }
             
+
+            dirDetails(directory, commands)
+            .then( (res) => {
+                console.log(res);
+                resolve( {"msg" : res} );
+            })
+            .catch( (err) => {
+                console.log(err);
+                reject( {'msg' : err} );
+            });
+
         });
     }
-    GLOBALcurrent_dir = "I CHANGED THIS thing"
-    res.json(GLOBALcurrent_dir);
+
+    changeWorkingDir(directory, commands).then((resolve) => {
+        console.log(resolve);
+        res.json(resolve);
+    }).catch( (reject ) => {
+        res.json(reject);
+    });
+
+
 });
+
+
 
 module.exports = router;
