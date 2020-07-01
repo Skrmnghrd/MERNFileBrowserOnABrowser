@@ -4,6 +4,14 @@ const process = require("process");
 
 const dirDetails = require('./dirDetailsFunction');
 
+/* 
+usage: accepts a json post request,
+with the format
+{
+    "directory" : "enter a directory name here",
+    "comamnd" : "-la"
+}
+*/
 
 router.route('/').post((req, res) => {
     //how do you call a method from another router?
@@ -15,7 +23,8 @@ router.route('/').post((req, res) => {
         return new Promise(function(resolve, reject){
             //don't forget to stringify the path later
             
-
+            console.log(directory + commands);
+            
             dirDetails(directory, commands)
             .then( (res) => {
                 console.log(res);

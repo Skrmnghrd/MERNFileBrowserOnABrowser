@@ -8,7 +8,7 @@ const promiseDirectoryDetails = function(directory, commands) {
        
        
         let ls = spawn("ls", [ String(directory), String(commands) ]); 
-
+       
         ls.stdout.on("data", data => {
             //from a buffer, to string, to an array split by newline
             data = data.toString().split("\n");

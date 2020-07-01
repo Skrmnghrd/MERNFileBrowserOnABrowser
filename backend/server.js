@@ -26,7 +26,7 @@ const changeDir = require('./routes/changeDir');
 app.use(cors());
 app.use(bodyParser.json());
 
-process.chdir("../shared_folder");
+//process.chdir("../shared_folder");
 
 app.use('/dirDetails', dirDetailsRouter);
 app.use('/fileCopy', fileCopyRouter);
