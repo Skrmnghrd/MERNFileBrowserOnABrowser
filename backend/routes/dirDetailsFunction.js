@@ -15,6 +15,7 @@ const promiseDirectoryDetails = function(directory, commands) {
 
             //lazy way to remove last array item :) sorry
             data.pop();
+            //removes the pesky . and .. and the extra new line at the end
             
             //stringify to add "" and parse to parse it neatly
             resolve( {"data": JSON.parse(JSON.stringify(data) ) } ); 

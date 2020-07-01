@@ -21,7 +21,7 @@ export default class CreateUsers extends Component {
         
         let dirAndCommand = {
             "directory" : "../",
-            "command" : "-la"
+            "command" : "-a"
         }
 
         axios.post('http://localhost:3001/changeDir/', dirAndCommand)
@@ -38,8 +38,8 @@ export default class CreateUsers extends Component {
     }
     onClickButton(e){
         let dirAndCommand = {
-            "directory" : "../",
-            "command" : "-la"
+            "directory" : "./",
+            "command" : "-a"
         }
 
         axios.post('http://localhost:3001/changeDir/', dirAndCommand)
@@ -54,6 +54,7 @@ export default class CreateUsers extends Component {
     }
     render(){ return(
         <div>
+            <button onClick={ this.onClickButton }> :) </button>
             { 
                 this.state.data.map(function(content){
                     return( 
@@ -61,11 +62,8 @@ export default class CreateUsers extends Component {
                         );
                 })
             }
-            <button onClick={ this.onClickButton }> :) </button>
-        </div>
-        
             
-        
+        </div>    
     )}
     
 
